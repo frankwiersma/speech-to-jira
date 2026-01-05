@@ -43,10 +43,10 @@ export default function RootLayout({
             </div>
           </div>
         </header>
-        <main className="px-4 sm:px-6 py-6 sm:py-8 flex-1">
+        <main className="px-4 sm:px-6 py-6 sm:py-8 flex-1 pb-16 sm:pb-20">
           {children}
         </main>
-        <footer className="border-t border-slate-200 flex-shrink-0 bg-white">
+        <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200 bg-white z-10">
           <div className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-500">
             POC - Audio verwerking via EU endpoints
           </div>
