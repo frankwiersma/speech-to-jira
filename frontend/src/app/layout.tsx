@@ -15,7 +15,7 @@ export default function RootLayout({
     <html lang="nl">
       <body className="min-h-screen bg-slate-50 flex flex-col">
         <header className="bg-white border-b border-slate-200 flex-shrink-0">
-          <div className="px-6 py-4 flex items-center gap-4">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3 sm:gap-4">
             {/* Logo: Mic to Jira */}
             <svg width="56" height="40" viewBox="0 0 56 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               {/* Microphone */}
@@ -34,20 +34,20 @@ export default function RootLayout({
               </g>
             </svg>
             <div>
-              <h1 className="text-xl font-semibold text-slate-900">
+              <h1 className="text-lg sm:text-xl font-semibold text-slate-900">
                 Audio to Jira
               </h1>
-              <p className="text-sm text-slate-500">
+              <p className="text-xs sm:text-sm text-slate-500 hidden sm:block">
                 Refinement sessies naar gestructureerde tickets
               </p>
             </div>
           </div>
         </header>
-        <main className="px-6 py-8 flex-1">
+        <main className="px-4 sm:px-6 py-6 sm:py-8 flex-1">
           {children}
         </main>
         <footer className="border-t border-slate-200 flex-shrink-0 bg-white">
-          <div className="px-6 py-4 text-sm text-slate-500">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-500">
             POC - Audio verwerking via EU endpoints
           </div>
         </footer>

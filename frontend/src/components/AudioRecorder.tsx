@@ -128,10 +128,10 @@ export default function AudioRecorder({ onRecordingComplete, disabled }: AudioRe
           )}
         </div>
       ) : (
-        <div className="bg-slate-50 rounded-lg p-6">
-          <div className="flex items-center justify-between">
+        <div className="bg-slate-50 rounded-lg p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
@@ -141,20 +141,20 @@ export default function AudioRecorder({ onRecordingComplete, disabled }: AudioRe
                 <p className="text-sm text-slate-500">Duur: {formatDuration(duration)}</p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full sm:w-auto">
               <button
                 onClick={handleDiscard}
-                className="btn btn-secondary text-sm"
+                className="btn btn-secondary text-sm flex-1 sm:flex-none"
                 disabled={disabled}
               >
                 Verwijder
               </button>
               <button
                 onClick={handleSubmit}
-                className="btn btn-primary text-sm"
+                className="btn btn-primary text-sm flex-1 sm:flex-none"
                 disabled={disabled}
               >
-                Verwerk Opname
+                Verwerk
               </button>
             </div>
           </div>

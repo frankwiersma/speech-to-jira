@@ -98,10 +98,10 @@ export default function Home() {
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col lg:flex-row gap-6">
       {/* Side Panel - Upload/Record */}
-      <aside className="w-80 flex-shrink-0">
-        <div className="card sticky top-8">
+      <aside className="w-full lg:w-80 lg:flex-shrink-0">
+        <div className="card lg:sticky lg:top-8">
           <div className="flex gap-1 mb-4 bg-slate-100 rounded-lg p-1">
             <button
               onClick={() => setActiveTab('upload')}
@@ -293,7 +293,7 @@ export default function Home() {
 
             {/* Generated Tickets */}
             <section>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                 <h2 className="text-lg font-semibold text-slate-900">
                   Gegenereerde Tickets ({result.tickets.length})
                 </h2>
