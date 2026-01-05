@@ -15,6 +15,20 @@ This application transcribes audio recordings of refinement/planning sessions an
 - **Export Options**: Download tickets as JSON, CSV, or Markdown
 - **Dutch Language Support**: Optimized for Dutch refinement sessions
 
+## Screenshots
+
+### Upload & Instructions
+![Upload and instructions](images/1.png)
+*Upload audio files or record directly, with step-by-step guidance*
+
+### Generated Tickets Overview
+![Generated tickets grid](images/2.png)
+*View all generated Stories and Tasks in a clean grid layout*
+
+### Ticket Details
+![Ticket details expanded](images/3.png)
+*Expand tickets to see descriptions, acceptance criteria, and source references*
+
 ## Tech Stack
 
 - **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
