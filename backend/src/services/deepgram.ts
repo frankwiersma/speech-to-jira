@@ -1,6 +1,13 @@
 const DEEPGRAM_API_KEY = process.env.DEEPGRAM_API_KEY;
 const DEEPGRAM_EU_ENDPOINT = 'https://api.eu.deepgram.com/v1/listen';
 
+interface Utterance {
+  start: number;
+  end: number;
+  transcript: string;
+  speaker?: number;
+}
+
 interface DeepgramResponse {
   results: {
     channels: Array<{
@@ -14,6 +21,7 @@ interface DeepgramResponse {
         }>;
       }>;
     }>;
+    utterances?: Utterance[];
   };
   metadata: {
     duration: number;
@@ -23,13 +31,16 @@ interface DeepgramResponse {
 
 interface TranscriptionResult {
   transcript: string;
+  timestampedTranscript: string;
   duration: number;
   confidence: number;
-  words?: Array<{
-    word: string;
-    start: number;
-    end: number;
-  }>;
+  utterances?: Utterance[];
+}
+
+function formatTimestamp(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
 export async function transcribeAudio(audioBuffer: ArrayBuffer, mimeType: string): Promise<TranscriptionResult> {
@@ -70,10 +81,18 @@ export async function transcribeAudio(audioBuffer: ArrayBuffer, mimeType: string
     throw new Error('No transcription result received');
   }
 
+  const utterances = data.results.utterances || [];
+
+  // Build timestamped transcript from utterances
+  const timestampedTranscript = utterances.length > 0
+    ? utterances.map(u => `[${formatTimestamp(u.start)}] ${u.transcript}`).join('\n')
+    : alternative.transcript;
+
   return {
     transcript: alternative.transcript,
+    timestampedTranscript,
     duration: data.metadata.duration,
     confidence: alternative.confidence,
-    words: alternative.words,
+    utterances,
   };
 }

@@ -60,8 +60,8 @@ export const generateRoute = new Elysia({ prefix: '/api' })
       const audioBuffer = await file.arrayBuffer();
       const transcription = await transcribeAudio(audioBuffer, file.type || 'audio/mpeg');
 
-      // Step 2: Generate tickets
-      const result = await generateTickets(transcription.transcript);
+      // Step 2: Generate tickets (use timestamped transcript for accurate timestamps)
+      const result = await generateTickets(transcription.timestampedTranscript);
 
       return {
         success: true,
