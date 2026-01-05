@@ -1,0 +1,16 @@
+FROM oven/bun:1.3 AS base
+
+WORKDIR /app
+
+# Install dependencies
+COPY backend/package.json backend/bun.lock* ./
+RUN bun install --frozen-lockfile
+
+# Copy source code
+COPY backend/src ./src
+
+# Expose port
+EXPOSE 4000
+
+# Start the server
+CMD ["bun", "run", "src/index.ts"]
