@@ -5,6 +5,8 @@ import AudioUploader from '@/components/AudioUploader';
 import AudioRecorder from '@/components/AudioRecorder';
 import TicketList from '@/components/TicketList';
 import ExportButtons from '@/components/ExportButtons';
+import SettingsModal from '@/components/SettingsModal';
+import { getApiHeaders, hasRequiredKeys } from '@/lib/apiKeys';
 
 interface JiraTicket {
   id: string;
@@ -24,14 +26,13 @@ interface ProcessResult {
   summary: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-
 export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [result, setResult] = useState<ProcessResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'upload' | 'record'>('upload');
   const [showTranscript, setShowTranscript] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const processAudio = async (audioBlob: Blob, filename?: string) => {
     setIsProcessing(true);
@@ -41,8 +42,15 @@ export default function Home() {
       const formData = new FormData();
       formData.append('audio', audioBlob, filename || 'recording.webm');
 
-      const response = await fetch(`${API_URL}/api/process`, {
+      if (!hasRequiredKeys()) {
+        setError('API keys required. Click ⚙ Settings to add your Deepgram and Azure OpenAI keys.');
+        setIsProcessing(false);
+        return;
+      }
+
+      const response = await fetch('/api/process', {
         method: 'POST',
+        headers: getApiHeaders(),
         body: formData,
       });
 
@@ -79,16 +87,16 @@ export default function Home() {
   };
 
   const handleLoadDemo = async () => {
+    if (!hasRequiredKeys()) {
+      setError('API keys required. Click ⚙ Settings to add your Deepgram and Azure OpenAI keys.');
+      return;
+    }
     setIsProcessing(true);
     setError(null);
 
     try {
-      // Fetch the pre-generated demo audio file
       const response = await fetch('/demo-refinement.mp3');
-      if (!response.ok) {
-        throw new Error('Demo bestand niet gevonden');
-      }
-
+      if (!response.ok) throw new Error('Demo bestand niet gevonden');
       const blob = await response.blob();
       await processAudio(blob, 'demo-refinement.mp3');
     } catch (err) {
@@ -99,6 +107,20 @@ export default function Home() {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+
+      {/* Settings button (floating) */}
+      <button
+        onClick={() => setSettingsOpen(true)}
+        title="API Key Settings"
+        className="fixed bottom-16 right-4 z-40 flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:bg-blue-700 transition"
+      >
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        ⚙ Settings
+      </button>
       {/* Side Panel - Upload/Record */}
       <aside className="w-full lg:w-80 lg:flex-shrink-0">
         <div className="card lg:sticky lg:top-8">
